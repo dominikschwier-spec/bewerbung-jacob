@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anschreiben – Dominik Schwier – JACOB</title>
+<style>
+:root{
+  --blue:#185FA5;--blue-l:#378ADD;--blue-ll:#B5D4F4;
+  --teal:#1D9E75;--teal-l:#5DCAA5;--teal-ll:#9FE1CB;
+  --flange:#0C447C;--dark:#1a1a18;--mid:#4a4a46;--light:#8a8a84;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Calibri','Gill Sans MT',sans-serif;
+  font-size:11pt;line-height:1.65;
+  color:var(--dark);
+  background-color:#b8a888;
+  background-image:url('desk-bg.svg');
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
+}
+
+/* ── PIPE STRIP (fixed left) ── */
+#pipe-strip{
+  position:absolute;left:0;top:0;bottom:0;
+  width:54px;z-index:100;pointer-events:none;
+}
+
+#pipe-rail-wrap{
+  position:absolute;left:50%;top:0;bottom:0;
+  width:16px;transform:translateX(-50%);
+}
+
+#pipe-rail{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(to right,
+    var(--flange) 0%,var(--blue-l) 28%,
+    #4aa0e8 50%,var(--blue-l) 72%,var(--flange) 100%);
+  border-radius:8px;
+  transform:scaleY(0);transform-origin:top center;
+  transition:transform 1.3s cubic-bezier(.4,0,.2,1);
+}
+#pipe-rail.show{transform:scaleY(1);}
+
+#pipe-cap{
+  position:absolute;top:0;left:50%;
+  transform:translateX(-50%) translateY(-6px);
+  width:28px;height:18px;
+  background:linear-gradient(to bottom,var(--blue-l),var(--flange));
+  border-radius:6px 6px 0 0;
+  opacity:0;transition:opacity 0.4s ease 1.2s;
+}
+#pipe-cap.show{opacity:1;}
+
+/* Bulge – the figure sliding inside */
+#pipe-bulge{
+  position:absolute;
+  left:50%;top:10%;
+  width:26px;height:32px;
+  transform:translateX(-50%) translateY(-50%);
+  background:radial-gradient(ellipse at 38% 38%,
+    var(--teal-ll),var(--teal) 60%,#0e7a5c);
+  border-radius:50%;
+  box-shadow:inset -3px -3px 6px rgba(0,0,0,.25),
+             0 0 8px rgba(29,158,117,.35);
+  opacity:0;transition:opacity .3s ease;
+  will-change:top;
+}
+#pipe-bulge.show{opacity:1;}
+
+/* ── PAGE CONTENT ── */
+.page-wrap{
+  position:relative;
+  max-width:230mm;
+  margin:40px auto;
+  padding:48px 60px 80px 74px;
+  background:#fff;
+  box-shadow:0 4px 28px rgba(0,0,0,.13),0 1px 4px rgba(0,0,0,.08);
+}
+
+/* ── HEADER ── */
+.letter-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:10px;border-bottom:1px solid #c0c0b8;
+  margin-bottom:40px;
+  opacity:0;transform:translateY(-8px);
+  transition:opacity .6s ease,transform .6s ease;
+}
+.letter-header.show{opacity:1;transform:translateY(0);}
+
+.header-name{
+  font-size:12pt;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--dark);white-space:nowrap;
+}
+.header-sep{
+  width:1px;height:26px;
+  background:var(--mid);opacity:.35;
+  flex-shrink:0;
+}
+.header-info{
+  font-size:7.5pt;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--mid);
+  text-align:center;line-height:1.9;
+}
+.header-info a{color:inherit;text-decoration:none;}
+
+/* ── RECIPIENT ── */
+.recipient{
+  font-size:10.5pt;line-height:1.75;
+  margin-bottom:48px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.recipient.show{opacity:1;transform:translateY(0);}
+
+/* ── DATE ── */
+.date-line{
+  text-align:right;font-size:10.5pt;
+  margin-bottom:32px;
+  opacity:0;transition:opacity .5s ease;
+}
+.date-line.show{opacity:1;}
+
+/* ── SUBJECT ── */
+.subject{
+  font-size:11pt;font-weight:700;
+  color:var(--blue);margin-bottom:28px;
+  opacity:0;transform:translateY(6px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.subject.show{opacity:1;transform:translateY(0);}
+
+/* ── BODY ── */
+.letter-body{
+  font-size:10.5pt;line-height:1.65;
+  opacity:0;transition:opacity .7s ease;
+}
+.letter-body.show{opacity:1;}
+.letter-body p{margin-bottom:14px;}
+.letter-body h3{
+  font-size:10.5pt;font-weight:700;
+  color:var(--dark);margin:22px 0 4px;
+}
+
+/* ── SIGN-OFF ── */
+.signoff{
+  margin-top:36px;font-size:10.5pt;
+  opacity:0;transition:opacity .6s ease;
+}
+.signoff.show{opacity:1;}
+.sig-name{
+  display:block;
+  margin:14px 0 6px;
+  height:52px;
+  width:auto;
+}
+
+/* ── BACK BUTTON ── */
+.nav-back{
+  position:fixed;top:16px;right:20px;
+  font-family:'Calibri','Gill Sans MT',sans-serif;
+  font-size:9pt;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--blue);text-decoration:none;
+  border:1px solid var(--blue-ll);border-radius:20px;
+  padding:5px 14px;background:#fff;z-index:200;
+  opacity:0;transition:opacity .5s ease 1.8s,background .2s;
+}
+.nav-back:hover{background:var(--blue-ll);}
+.nav-back.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<a class="nav-back" id="nav-back" href="index.html">← Deckblatt</a>
+
+<!-- LETTER -->
+<div class="page-wrap">
+
+<!-- PIPE STRIP (inside paper) -->
+<div id="pipe-strip">
+  <div id="pipe-cap"></div>
+  <div id="pipe-rail-wrap">
+    <div id="pipe-rail"></div>
+  </div>
+  <div id="pipe-bulge"></div>
+</div>
+
+  <header class="letter-header" id="hdr">
+    <div class="header-name">Dominik Schwier</div>
+    <div class="header-sep"></div>
+    <div class="header-info">Albert-Schweitzer-Straße 1<br>32549 Bad Oeynhausen</div>
+    <div class="header-sep"></div>
+    <div class="header-info">016099194715<br><a href="mailto:dominik@schwier.me">dominik@schwier.me</a></div>
+  </header>
+
+  <div class="recipient" id="recip">
+    JACOB GmbH &amp; Co. KG<br>
+    [Ansprechpartner]<br>
+    [Straße Hausnummer]<br>
+    [PLZ Ort]
+  </div>
+
+  <div class="date-line" id="dateline">Bad Oeynhausen, Mai 2026</div>
+
+  <div class="subject" id="subject">Bewerbung als Corporate Communication Manager</div>
+
+  <div class="letter-body" id="body">
+    <p>Sehr geehrte Damen und Herren,</p>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+
+    <h3>Was ich mitbringe</h3>
+    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet consectetur adipisci velit, sed quia non numquam eius modi tempora.</p>
+
+    <h3>Warum JACOB</h3>
+    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident. Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus. Meine Gehaltsvorstellung liegt bei ca. XX.000 € brutto pro Jahr. Ich stehe für die Position ab sofort zur Verfügung.</p>
+
+    <p>Sehr gern erläutere ich Ihnen in einem persönlichen Gespräch, wie ich Ihr Team mit meiner Erfahrung unterstützen kann.</p>
+  </div>
+
+  <div class="signoff" id="signoff">
+    <p>Mit freundlichen Grüßen</p>
+    <img class="sig-name" src="unterschrift.png" alt="Unterschrift Dominik Schwier">
+    <p>Dominik Schwier</p>
+  </div>
+
+</div>
+
+<script>
+// ── STAGGERED REVEAL ──
+[
+  ['hdr',     100],
+  ['recip',   500],
+  ['dateline',800],
+  ['subject', 1100],
+  ['body',    1400],
+  ['signoff', 1800],
+  ['nav-back',1900],
+].forEach(([id,delay])=>{
+  setTimeout(()=>document.getElementById(id).classList.add('show'), delay);
+});
+
+// ── PIPE: builds top → bottom ──
+setTimeout(()=>{
+  document.getElementById('pipe-rail').classList.add('show');
+  document.getElementById('pipe-cap').classList.add('show');
+}, 200);
+
+// bulge appears after pipe is built
+setTimeout(()=>{
+  document.getElementById('pipe-bulge').classList.add('show');
+}, 1600);
+
+// ── SCROLL-DRIVEN BULGE ──
+const bulge = document.getElementById('pipe-bulge');
+
+function updateBulge(){
+  const pw  = document.querySelector('.page-wrap');
+  const pwH = pw ? pw.offsetHeight : window.innerHeight;
+  const st  = window.scrollY;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = max > 0 ? Math.min(st / max, 1) : 0;
+  bulge.style.top = (pwH * (0.02 + pct * 0.95)) + 'px';
+}
+
+window.addEventListener('scroll', updateBulge, {passive:true});
+updateBulge();
+</script>
+
+<script>
+/* ── SCROLL-NAVIGATION: index ← anschreiben → lebenslauf ── */
+(function(){
+  function go(url){
+    document.body.style.transition='opacity .25s ease';
+    document.body.style.opacity='0';
+    setTimeout(function(){location.href=url;},260);
+  }
+  var cd=false;
+  window.addEventListener('wheel',function(e){
+    if(cd)return;
+    var bot=(window.scrollY+window.innerHeight)>=(document.documentElement.scrollHeight-10);
+    var top=window.scrollY<=0;
+    if(e.deltaY>30&&bot){cd=true;go('lebenslauf.html');}
+    else if(e.deltaY<-30&&top){cd=true;go('index.html');}
+  },{passive:true});
+})();
+</script>
+</body>
+</html>

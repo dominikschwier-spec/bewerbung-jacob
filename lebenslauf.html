@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lebenslauf – Dominik Schwier – JACOB</title>
+<style>
+:root{
+  --blue:#185FA5;--blue-l:#378ADD;--blue-ll:#B5D4F4;
+  --teal:#1D9E75;--teal-l:#5DCAA5;--teal-ll:#9FE1CB;
+  --flange:#0C447C;--dark:#1a1a18;--mid:#4a4a46;--light:#8a8a84;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Calibri','Gill Sans MT',sans-serif;
+  font-size:10.5pt;line-height:1.6;
+  color:var(--dark);
+  background-color:#b8a888;
+  background-image:url('desk-bg.svg');
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
+}
+
+/* ── PIPE STRIP (fixed left) ── */
+#pipe-strip{
+  position:absolute;left:0;top:0;bottom:0;
+  width:54px;z-index:100;pointer-events:none;
+}
+#pipe-rail-wrap{
+  position:absolute;left:50%;top:0;bottom:0;
+  width:16px;transform:translateX(-50%);
+}
+#pipe-rail{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(to right,
+    var(--flange) 0%,var(--blue-l) 28%,
+    #4aa0e8 50%,var(--blue-l) 72%,var(--flange) 100%);
+  border-radius:8px;
+  transform:scaleY(0);transform-origin:top center;
+  transition:transform 1.3s cubic-bezier(.4,0,.2,1);
+}
+#pipe-rail.show{transform:scaleY(1);}
+#pipe-cap{
+  position:absolute;top:0;left:50%;
+  transform:translateX(-50%) translateY(-6px);
+  width:28px;height:18px;
+  background:linear-gradient(to bottom,var(--blue-l),var(--flange));
+  border-radius:6px 6px 0 0;
+  opacity:0;transition:opacity .4s ease 1.2s;
+}
+#pipe-cap.show{opacity:1;}
+#pipe-bulge{
+  position:absolute;
+  left:50%;top:10%;
+  width:26px;height:32px;
+  transform:translateX(-50%) translateY(-50%);
+  background:radial-gradient(ellipse at 38% 38%,
+    var(--teal-ll),var(--teal) 60%,#0e7a5c);
+  border-radius:50%;
+  box-shadow:inset -3px -3px 6px rgba(0,0,0,.25),
+             0 0 8px rgba(29,158,117,.35);
+  opacity:0;transition:opacity .3s ease;
+  will-change:top;
+}
+#pipe-bulge.show{opacity:1;}
+
+/* ── PAGE CONTENT ── */
+.page-wrap{
+  position:relative;
+  max-width:230mm;
+  margin:40px auto;
+  padding:52px 60px 80px 74px;
+  background:#fff;
+  box-shadow:0 4px 28px rgba(0,0,0,.13),0 1px 4px rgba(0,0,0,.08);
+}
+
+/* ── CV HEADER ── */
+.cv-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:12px;
+  opacity:0;transform:translateY(-8px);
+  transition:opacity .6s ease,transform .6s ease;
+}
+.cv-header.show{opacity:1;transform:translateY(0);}
+
+.cv-name{font-size:26pt;font-weight:700;color:var(--dark);line-height:1.1;}
+.cv-subtitle{font-size:11pt;color:var(--blue-l);margin-top:4px;}
+.cv-contact{
+  font-size:9.5pt;color:var(--dark);
+  display:grid;grid-template-columns:max-content 1fr;
+  gap:0 8px;align-content:start;
+}
+.cv-contact .lbl{color:var(--blue);font-weight:600;white-space:nowrap;}
+.cv-contact .val{color:var(--dark);line-height:1.55;}
+.cv-contact a{color:inherit;text-decoration:none;}
+
+/* ── SECTION DIVIDER ── */
+.divider{
+  height:1px;background:#c8c8c0;
+  margin:18px 0 24px;
+  opacity:0;transform:scaleX(0);transform-origin:left center;
+  transition:opacity .2s ease,transform .6s cubic-bezier(.4,0,.2,1);
+}
+.divider.show{opacity:1;transform:scaleX(1);}
+
+/* ── SECTION ROW ── */
+.section{
+  display:grid;
+  grid-template-columns:90px 1fr;
+  gap:0 32px;
+  margin-bottom:28px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.section.show{opacity:1;transform:translateY(0);}
+
+.section-label{
+  font-size:7.5pt;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--blue);line-height:1.4;
+  padding-top:2px;
+}
+
+/* ── JOB ENTRIES ── */
+.job{margin-bottom:22px;}
+.job:last-child{margin-bottom:0;}
+.job-title{font-size:10.5pt;font-weight:700;color:var(--dark);margin-bottom:5px;}
+.job ul{padding-left:18px;margin-top:4px;}
+.job li{margin-bottom:3px;}
+.job li strong{font-weight:700;}
+
+/* ── EDUCATION ── */
+.edu-entry{
+  display:grid;grid-template-columns:155px 1fr;
+  gap:0 24px;margin-bottom:18px;
+}
+.edu-inst{font-size:10pt;color:var(--dark);}
+.edu-date{font-size:9.5pt;color:var(--mid);margin-top:2px;}
+.edu-degree{font-size:10.5pt;font-weight:700;color:var(--dark);}
+.edu-grade{font-size:10pt;color:var(--mid);margin-top:2px;}
+
+/* ── SKILLS GRID ── */
+.skills-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px 32px;
+}
+.skill-cat{font-size:10pt;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.skill-list{list-style:disc;padding-left:18px;}
+.skill-list li{font-size:10pt;margin-bottom:2px;}
+
+/* ── MISC TWO-COL ── */
+.misc-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px 32px;
+}
+.misc-block h4{font-size:10pt;font-weight:700;color:var(--dark);margin-bottom:6px;}
+.misc-block ul{list-style:disc;padding-left:18px;}
+.misc-block li{font-size:10pt;margin-bottom:3px;}
+.misc-block li strong{font-weight:700;}
+
+/* ── BACK BUTTON ── */
+.nav-back{
+  position:fixed;top:16px;right:20px;
+  font-family:'Calibri','Gill Sans MT',sans-serif;
+  font-size:9pt;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--blue);text-decoration:none;
+  border:1px solid var(--blue-ll);border-radius:20px;
+  padding:5px 14px;background:#fff;z-index:200;
+  opacity:0;transition:opacity .5s ease 1.8s,background .2s;
+}
+.nav-back:hover{background:var(--blue-ll);}
+.nav-back.show{opacity:1;}
+
+@media print{
+  @page{size:A4;margin:18mm 18mm 18mm 18mm;}
+  body{font-size:10pt;}
+  #pipe-strip,.nav-back{display:none!important;}
+  .page-wrap{padding:0;max-width:100%;}
+  .cv-header,.section,.divider{opacity:1!important;transform:none!important;}
+  .divider{background:#999;}
+  a{color:inherit;text-decoration:none;}
+}
+</style>
+</head>
+<body>
+
+<a class="nav-back" id="nav-back" href="index.html">← Deckblatt</a>
+
+<!-- CV CONTENT -->
+<div class="page-wrap">
+
+<!-- PIPE (inside paper) -->
+<div id="pipe-strip">
+  <div id="pipe-cap"></div>
+  <div id="pipe-rail-wrap">
+    <div id="pipe-rail"></div>
+  </div>
+  <div id="pipe-bulge"></div>
+</div>
+
+  <!-- HEADER -->
+  <div class="cv-header" id="cv-header">
+    <div>
+      <div class="cv-name">Dominik Schwier</div>
+      <div class="cv-subtitle">Marketing Communication Professional</div>
+    </div>
+    <div class="cv-contact">
+      <span class="lbl">Tel.:</span><span class="val">+49 160 99194715</span>
+      <span class="lbl">E-Mail:</span><span class="val"><a href="mailto:dominik@schwier.me">dominik@schwier.me</a></span>
+      <span class="lbl">Adresse:</span><span class="val">Albert-Schweitzer-Straße 1,<br>32549 Bad Oeynhausen</span>
+    </div>
+  </div>
+
+  <div class="divider" id="d1"></div>
+
+  <!-- PROFIL -->
+  <div class="section" id="s-profil">
+    <div class="section-label">Profil</div>
+    <div>
+      Kreativer und innovativer Marketing- und Kommunikationsprofi mit langjähriger Erfahrung in Kampagnensteuerung, crossmedialer Content-Produktion (Video, Print, Web) und Brand Management. Spezialisiert auf Medienproduktion, Onlinekommunikation und der Vermittlung komplexer Inhalte in verständlicher, visueller Form für diverse Zielgruppen.
+    </div>
+  </div>
+
+  <div class="divider" id="d2"></div>
+
+  <!-- BERUFSERFAHRUNG -->
+  <div class="section" id="s-berufs">
+    <div class="section-label">Berufs&shy;erfahrung</div>
+    <div>
+
+      <div class="job">
+        <div class="job-title">Weiterbildung in Digitaler Kommunikation &amp; KI &nbsp;|&nbsp; 01 / 2026 – heute</div>
+        <ul>
+          <li>Weiterbildung in KI-gestützter Kommunikation, Automatisierung und digitaler Content-Strategie.</li>
+          <li>Eigenständige Projektarbeit in KI-basierten Text- und Medien-Workflows sowie Erweiterung technischer Kompetenzen (Python, Nextcloud, Automatisierung)</li>
+          <li>Einsatz von KI für Textentwürfe und Ideenfindung, KI-basierte Bildgenerierung mit Midjourney, Automatisierung von Content-Workflows sowie Prompt-Engineering für zielgruppenspezifische Kommunikation.</li>
+          <li>Parallel aktive Bewerbungsphase</li>
+          <li>Vorherige Tätigkeit endete im Zuge einer unternehmensweiten Restrukturierung</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-title">Marketing Communication Professional &nbsp;|&nbsp; AS Audio-Service GmbH &nbsp;|&nbsp; 06 / 2021 – 12 / 2025</div>
+        <ul>
+          <li><strong>Kampagnensteuerung B2B &amp; B2B2C:</strong><br>Konzeption und Versand von Werbe- und Produktkatalogen (&gt; 5.000 Kunden)</li>
+          <li><strong>Brand Management</strong><br>Führung und Pflege der Hörgerätemarke „Audio Service"</li>
+          <li><strong>Verantwortung für die Unternehmenswebsite &amp; Social Media:</strong><br>Steigerung des Traffics um +20% in 6 Monaten</li>
+          <li><strong>Produktion von Image- und Produktvideos:</strong><br>in Kooperation mit Agenturen sowie intern (eigenständiger Aufbau eines Aufnahmestudios)</li>
+          <li><strong>Organisation von Messeauftritten und Events:</strong><br>Konzeption Firmenstand, Planung Auftritt auf dem jährlichen Internationalen Hörakustiker-Kongress (&gt; 8.000 Besucher)</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-title">PR-Manager &nbsp;|&nbsp; Anders &amp; Rodewyk GmbH &nbsp;|&nbsp; 04 / 2018 – 05 / 2021</div>
+        <ul>
+          <li><strong>Entwicklung regionaler PR-Strategien:</strong><br>Steigerung der Präsenz online sowie in regionalen Medien</li>
+          <li><strong>Gestaltung von Werbematerialien für B2B</strong></li>
+          <li><strong>Verantwortung für Firmenzeitschrift „AR aktuell":</strong> Abonnentenanzahl &gt;2.500</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-title">PR-Redakteur &amp; Projektmanager &nbsp;|&nbsp; CX9 Systems GmbH &nbsp;|&nbsp; 06 / 2015 – 03 / 2018</div>
+        <ul>
+          <li><strong>Erstellung von Webinhalten und Öffentlichkeitsarbeit</strong></li>
+          <li><strong>Projektmanagement bei Softwareimplementierungen</strong></li>
+          <li><strong>Schulung und Beratung von Kunden (In- und Ausland)</strong></li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-title">Redakteur (freiberuflich) &nbsp;|&nbsp; Ungewohntes Magazin &nbsp;|&nbsp; 03 / 2012 – 06 / 2013</div>
+        <ul>
+          <li><strong>Verfassen von Film- und TV-Kritiken</strong></li>
+          <li><strong>Themenfindung und Mitarbeit an der inhaltlichen Gestaltung des Magazins</strong></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider" id="d3"></div>
+
+  <!-- AUSBILDUNG -->
+  <div class="section" id="s-ausb">
+    <div class="section-label">Ausbildung</div>
+    <div>
+      <div class="edu-entry">
+        <div>
+          <div class="edu-inst">Universität Bielefeld (Bielefeld)</div>
+          <div class="edu-date">10 / 2009 – 07 / 2012</div>
+        </div>
+        <div>
+          <div class="edu-degree">Master „Interdisziplinäre Medienwissenschaft"</div>
+          <div class="edu-grade">Note: 1,7</div>
+        </div>
+      </div>
+      <div class="edu-entry">
+        <div>
+          <div class="edu-inst">Universität Bielefeld (Bielefeld)</div>
+          <div class="edu-date">10 / 2004 – 10 / 2009</div>
+        </div>
+        <div>
+          <div class="edu-degree">Bachelor „Literaturwissenschaft" &amp; „Texttechnologie"</div>
+          <div class="edu-grade">Note: 2,4</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider" id="d4"></div>
+
+  <!-- AUSLANDSERFAHRUNG -->
+  <div class="section" id="s-ausland">
+    <div class="section-label">Auslands&shy;erfahrung</div>
+    <div>
+      <div class="edu-entry">
+        <div>
+          <div class="edu-inst">NGO-Taxi (Cusco, Peru) |<br>Alfa Apart (Bodrum,&nbsp;Türkei)&nbsp;|<br>Sundeck Gardens and Beach Health Retreat (Maroochydore, Australien)</div>
+          <div class="edu-date">04 / 2014 – 12 / 2014</div>
+        </div>
+        <div>
+          <div class="edu-degree">Marketing, Social-Media-Management, Mediendesign, Öffentlichkeitsarbeit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider" id="d5"></div>
+
+  <!-- KOMPETENZEN -->
+  <div class="section" id="s-kompe">
+    <div class="section-label">Kompetenzen<br>&amp;&nbsp;Fähigkeiten</div>
+    <div class="skills-grid">
+      <div>
+        <div class="skill-cat">Redaktion:</div>
+        <ul class="skill-list">
+          <li>Pressemitteilungen</li>
+          <li>Webtexte</li>
+          <li>Features, Interviews</li>
+          <li>Corporate Publishing</li>
+        </ul>
+      </div>
+      <div>
+        <div class="skill-cat">Multimedia:</div>
+        <ul class="skill-list">
+          <li>Video- &amp; Audioproduktion (Premiere, Audition, DaVinci Resolve)</li>
+          <li>Fotografie &amp; Bildbearbeitung</li>
+          <li>Licht-, Kamera- &amp; Tontechnik</li>
+          <li>Postproduktion</li>
+        </ul>
+      </div>
+      <div>
+        <div class="skill-cat">Digital:</div>
+        <ul class="skill-list">
+          <li>CMS (WordPress, Typo3, Sitecore)</li>
+          <li>SEO, Google Analytics</li>
+          <li>HTML/CSS</li>
+          <li>Salesforce</li>
+        </ul>
+      </div>
+      <div>
+        <div class="skill-cat">Tools:</div>
+        <ul class="skill-list">
+          <li>Microsoft Office</li>
+          <li>Adobe Creative Suite: Photoshop, InDesign, Illustrator, Canva</li>
+          <li>Hootsuite</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider" id="d6"></div>
+
+  <!-- SONSTIGES -->
+  <div class="section" id="s-sonst">
+    <div class="section-label">Sonstiges</div>
+    <div class="misc-grid">
+      <div class="misc-block">
+        <h4>Zertifikate:</h4>
+        <ul>
+          <li><strong>FIRST CERTIFICATE IN ENGLISH</strong><br>University of Cambridge: Grade B</li>
+          <li><strong>AI and Career Empowerment</strong><br>Robert H. Smith School of Business, University of Maryland</li>
+        </ul>
+      </div>
+      <div class="misc-block">
+        <h4>&nbsp;</h4>
+        <ul>
+          <li><strong>MINI MBA IN BRAND MANAGEMENT</strong><br>Centaur Media PLC: Grade A</li>
+          <li><strong>Google Prompting Essentials</strong><br>Google LLC</li>
+        </ul>
+      </div>
+      <div class="misc-block">
+        <h4>Ehrenamtliche Tätigkeiten:</h4>
+        <ul>
+          <li>Flüchtlingshilfe bei Johanniter-Unfall-Hilfe e.V.: 10 / 2015 – 08 / 2016</li>
+        </ul>
+      </div>
+      <div class="misc-block">
+        <h4>Sprachen:</h4>
+        <ul>
+          <li>Deutsch – Muttersprache</li>
+          <li>Englisch – fließend</li>
+        </ul>
+      </div>
+      <div class="misc-block">
+        <h4>Portfolio:</h4>
+        <ul>
+          <li>Image- und Produktvideos: <a href="https://www.youtube.com/playlist?list=PLEAJFKlsgr1z3lvF_efCOKTkoA40VVlbf" target="_blank">Link</a></li>
+          <li>Textbeispiele: <a href="https://sonimundus.de/audio-service-mit-neuer-g7-plattform/" target="_blank">Link</a>, <a href="https://wsa.showpad.com/share/pWRR1VBKtNAvtVg2SxxOp" target="_blank">Link</a></li>
+          <li>Reiseblogging-Kanal auf YouTube: <a href="https://www.youtube.com/channel/UCtT_yRVLnQfsaJixIEyU-Zw" target="_blank">Link</a></li>
+        </ul>
+      </div>
+      <div class="misc-block">
+        <h4>Führerscheine:</h4>
+        <ul>
+          <li>A, B, ML</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page-wrap -->
+
+<script>
+// ── STAGGERED REVEAL ──
+[
+  ['cv-header', 100],
+  ['d1',        400],
+  ['s-profil',  500],
+  ['d2',        700],
+  ['s-berufs',  800],
+  ['d3',       1000],
+  ['s-ausb',   1100],
+  ['d4',       1200],
+  ['s-ausland',1300],
+  ['d5',       1400],
+  ['s-kompe',  1500],
+  ['d6',       1600],
+  ['s-sonst',  1700],
+  ['nav-back', 1800],
+].forEach(([id,delay])=>{
+  setTimeout(()=>document.getElementById(id).classList.add('show'), delay);
+});
+
+// ── PIPE: top → bottom ──
+setTimeout(()=>{
+  document.getElementById('pipe-rail').classList.add('show');
+  document.getElementById('pipe-cap').classList.add('show');
+}, 200);
+
+setTimeout(()=>{
+  document.getElementById('pipe-bulge').classList.add('show');
+}, 1600);
+
+// ── SCROLL-DRIVEN BULGE ──
+const bulge = document.getElementById('pipe-bulge');
+
+function updateBulge(){
+  const pw  = document.querySelector('.page-wrap');
+  const pwH = pw ? pw.offsetHeight : window.innerHeight;
+  const st  = window.scrollY;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = max > 0 ? Math.min(st / max, 1) : 0;
+  bulge.style.top = (pwH * (0.02 + pct * 0.95)) + 'px';
+}
+
+window.addEventListener('scroll', updateBulge, {passive:true});
+updateBulge();
+</script>
+
+<script>
+/* ── SCROLL-NAVIGATION: anschreiben ← lebenslauf → abschluss ── */
+(function(){
+  function go(url){
+    document.body.style.transition='opacity .25s ease';
+    document.body.style.opacity='0';
+    setTimeout(function(){location.href=url;},260);
+  }
+  var cd=false;
+  window.addEventListener('wheel',function(e){
+    if(cd)return;
+    var bot=(window.scrollY+window.innerHeight)>=(document.documentElement.scrollHeight-10);
+    var top=window.scrollY<=0;
+    if(e.deltaY>30&&bot){cd=true;go('abschluss.html');}
+    else if(e.deltaY<-30&&top){cd=true;go('anschreiben.html');}
+  },{passive:true});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abschluss – Dominik Schwier – JACOB</title>
+<style>
+:root{
+  --blue:#185FA5;--blue-l:#378ADD;--blue-ll:#B5D4F4;
+  --teal:#1D9E75;--teal-l:#5DCAA5;
+  --dark:#1a1a18;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Calibri','Gill Sans MT',sans-serif;
+  background-color:#b8a888;
+  background-image:url('desk-bg.svg');
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
+  color:var(--dark);
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  overflow-x:hidden;
+}
+.paper{
+  background:#fff;
+  box-shadow:0 4px 28px rgba(0,0,0,.13),0 1px 4px rgba(0,0,0,.08);
+  width:100%;max-width:230mm;
+  margin:40px 0;
+  display:flex;flex-direction:column;align-items:center;
+}
+#scene{
+  display:block;width:100%;max-width:230mm;height:560px;
+  image-rendering:pixelated;image-rendering:crisp-edges;
+}
+.text-wrap{
+  text-align:center;padding:10px 24px 60px;
+  max-width:700px;
+}
+#congrats{
+  font-size:19pt;font-weight:700;color:var(--blue);
+  margin-bottom:22px;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+#congrats.show{opacity:1;transform:translateY(0);}
+#sub-text{
+  font-size:13pt;color:var(--dark);margin-bottom:20px;
+  opacity:0;transition:opacity .7s ease;
+}
+#sub-text.show{opacity:1;}
+#btn-zeug{
+  display:inline-block;
+  font-family:'Calibri','Gill Sans MT',sans-serif;
+  font-size:11pt;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--blue);text-decoration:none;
+  border:1px solid var(--blue-ll);border-radius:24px;
+  padding:10px 30px;background:#fff;
+  opacity:0;transition:opacity .6s ease,background .2s;
+}
+#btn-zeug:hover{background:var(--blue-ll);}
+#btn-zeug.show{opacity:1;}
+.nav-back{
+  position:fixed;top:16px;right:20px;
+  font-family:'Calibri','Gill Sans MT',sans-serif;
+  font-size:9pt;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--blue);text-decoration:none;
+  border:1px solid var(--blue-ll);border-radius:20px;
+  padding:5px 14px;background:#fff;z-index:200;
+  opacity:0;transition:opacity .5s ease,background .2s;
+}
+.nav-back:hover{background:var(--blue-ll);}
+.nav-back.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<a class="nav-back" id="nav-back" href="index.html">← Deckblatt</a>
+<div class="paper">
+<canvas id="scene"></canvas>
+
+<div class="text-wrap">
+  <div id="congrats">Congratulations! You've found your new colleagues!</div>
+  <div id="sub-text">Zu den Anlagen hier entlang</div>
+  <a id="btn-zeug" href="anlagen.html">→ Anlagen</a>
+</div>
+</div><!-- /paper -->
+
+<script>
+const cv = document.getElementById('scene');
+const ctx = cv.getContext('2d');
+
+// pixel block size
+const S = 3;
+
+// colors
+const BLU  = '#185FA5', BLU_L = '#378ADD', BLU_LL = '#B5D4F4';
+const TEAL = '#1D9E75', TEAL_L= '#5DCAA5';
+const FLG  = '#0C447C';
+
+// ── resize canvas to CSS size ──
+function resize(){
+  cv.width  = cv.offsetWidth;
+  cv.height = cv.offsetHeight || 420;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ── draw single pixel block ──
+function px(x,y,col){ ctx.fillStyle=col; ctx.fillRect(x,y,S,S); }
+
+// ── draw character ──
+// cx,cy = top-left pixel (pre-scaled), bounce = y-offset
+function drawChar(cx, cy, cfg, waveAmt, alpha){
+  if(alpha<=0) return;
+  ctx.globalAlpha = Math.min(alpha,1);
+  const {
+    skin='#EABB8A', hair='#2a1a10', top='#1B2A44',
+    pants='#222233', shoes='#111',
+    glasses=false, helmet=false, helmetCol=BLU,
+    beard=false, longHair=false, wave=false,
+    accent=null
+  } = cfg;
+
+  const p=(gx,gy,c)=>{ if(c) px(cx+gx*S, cy+gy*S, c); };
+
+  // long hair behind (cols -1 & 8, rows 0-13)
+  if(longHair){
+    for(let r=0;r<14;r++){
+      p(-1,r,hair); p(8,r,hair);
+      if(r>5){ p(-2,r,hair); p(9,r,hair); }
+    }
+  }
+
+  // ── HEAD rows 0-7 ──
+  // hair top
+  for(let c=0;c<8;c++) p(c,0,hair);
+  for(let c=1;c<7;c++) p(c,1,hair);
+  // face rows 2-7
+  for(let r=2;r<8;r++){
+    p(0,r,hair);
+    for(let c=1;c<7;c++) p(c,r,skin);
+    p(7,r,hair);
+  }
+  // eyes row 3
+  p(2,3,'#222'); p(5,3,'#222');
+  // smile row 5-6
+  p(2,5,'#333'); p(5,5,'#333');
+  p(3,6,'#884433'); p(4,6,'#884433');
+
+  // glasses overlay
+  if(glasses){
+    ctx.fillStyle='#555';
+    ctx.fillRect(cx+1*S, cy+3*S, 2*S, 2*S);
+    ctx.fillRect(cx+5*S, cy+3*S, 2*S, 2*S);
+    ctx.fillStyle='#888';
+    ctx.fillRect(cx+3*S, cy+3*S+Math.floor(S*0.6), 2*S, Math.ceil(S*0.4));
+  }
+  // beard
+  if(beard){
+    const bc='#4a3020';
+    p(1,6,bc);p(2,6,bc);p(3,6,bc);p(4,6,bc);p(5,6,bc);p(6,6,bc);
+    p(2,7,bc);p(3,7,bc);p(4,7,bc);p(5,7,bc);
+  }
+  // helmet (covers top 3 rows + wide brim at row 2)
+  if(helmet){
+    for(let c=-1;c<9;c++) p(c,0,helmetCol);
+    for(let c=-1;c<9;c++) p(c,1,helmetCol);
+    for(let c=-2;c<10;c++) p(c,2,FLG);
+  }
+
+  // ── NECK row 8 ──
+  p(2,8,skin); p(3,8,skin); p(4,8,skin); p(5,8,skin);
+
+  // ── BODY rows 9-16 ──
+  // wave arm (col -1, rows shift up)
+  if(wave && waveAmt>0){
+    const up = Math.round(waveAmt*4);
+    for(let r=9;r<15;r++) p(-1, r-up, top);
+    p(-1, 9-up, skin); // hand
+  } else {
+    for(let r=9;r<15;r++) p(-1,r,top);
+  }
+  // right arm
+  for(let r=9;r<15;r++) p(8,r,top);
+  // torso
+  for(let r=9;r<17;r++){
+    for(let c=0;c<8;c++) p(c,r,top);
+  }
+  // accent (teal JACOB-ish logo)
+  if(accent){ p(5,12,accent); p(6,12,accent); p(5,11,accent); }
+
+  // ── LEGS rows 17-20 ──
+  for(let r=17;r<21;r++){
+    p(1,r,pants); p(2,r,pants);
+    p(5,r,pants); p(6,r,pants);
+  }
+  // ── SHOES row 21 ──
+  p(0,21,shoes); p(1,21,shoes); p(2,21,shoes);
+  p(5,21,shoes); p(6,21,shoes); p(7,21,shoes);
+
+  ctx.globalAlpha = 1;
+}
+
+// character total height in px
+const CH = 22*S; // 66px
+const CW =  8*S; // 24px
+
+// ── COLLEAGUE CONFIGS (based on photos) ──
+// Order: W1(dark,wave), W2(red long), W3(brown bob), M1(gray glasses), M2(dark jacket), M3(helmet)
+const CFGS = [
+  // W1 – warm tan skin, long dark-brown hair, JACOB polo, wave
+  { skin:'#C8845A', hair:'#2a1208', top:'#1B2A44', pants:'#222233', longHair:true, wave:true, accent:TEAL },
+  // W2 – light skin, long red hair
+  { skin:'#F0C8A0', hair:'#8B2000', top:'#1B2A44', pants:'#222233', longHair:true },
+  // W3 – medium, short dark-brown bob
+  { skin:'#D8B898', hair:'#2a1508', top:'#1B2A44', pants:'#222233' },
+  // M1 – older, gray hair, glasses
+  { skin:'#D4A888', hair:'#8a8a88', top:'#1B2A44', pants:'#222233', glasses:true },
+  // M2 – dark skin, black jacket, teal accent
+  { skin:'#9a5838', hair:'#111', top:'#222222', pants:'#333', accent:TEAL },
+  // M3 – blue helmet
+  { skin:'#C08060', hair:'#2a1508', top:'#1B2A44', pants:'#222233', helmet:true, helmetCol:BLU },
+];
+
+// ── DOMINIK PIXEL SPRITE (exact copy from index.html) ──
+const _=null;
+const DH='#4a3f3a',DSk='#D4A882',DG='#404040',DEY='#1a1510';
+const DB='#3a3030',DJ='#6B3A2A',DW='#f0ece8',DP='#252525',DSH='#1a1515';
+const FRAMES=[
+ [[_,_,_,DH,DH,DH,DH,DH,DH,DH,DH,_,_,_,_,_],[_,_,DH,DH,DH,DH,DH,DH,DH,DH,DH,DH,_,_,_,_],[_,_,DH,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DH,_,_,_,_],[_,_,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,_,_,_,_,_],[_,_,DSk,DG,DG,DG,DSk,DSk,DG,DG,DG,DSk,_,_,_,_],[_,_,DSk,DG,DEY,DG,DG,DG,DG,DEY,DG,DSk,_,_,_,_],[_,_,DSk,DG,DG,DG,DSk,DSk,DG,DG,DG,DSk,_,_,_,_],[_,_,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,_,_,_,_,_],[_,_,DB,DB,DSk,DSk,DSk,DSk,DB,DB,_,_,_,_,_,_],[_,_,DB,DB,DB,DB,DB,DB,DB,DB,_,_,_,_,_,_],[_,DJ,DJ,DJ,DJ,DW,DW,DJ,DJ,DJ,DJ,DJ,_,_,_,_],[DJ,DJ,DJ,DW,DW,DW,DW,DW,DW,DJ,DJ,DJ,DJ,_,_,_],[DJ,DJ,DW,DW,DW,DW,DW,DW,DW,DW,DJ,DJ,_,_,_,_],[DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,_,_,_,_],[_,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,_,_,_,_,_],[_,_,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,_,_,_,_,_,_],[_,_,DP,DP,DP,DP,DP,DP,DP,DP,_,_,_,_,_,_],[_,DP,DP,DP,_,_,_,_,DP,DP,DP,_,_,_,_,_],[DP,DP,DP,_,_,_,_,_,_,DP,DP,DP,_,_,_,_],[DP,DP,DP,_,_,_,_,_,_,DP,DP,DP,_,_,_,_],[DSH,DSH,DSH,_,_,_,_,_,_,DSH,DSH,DSH,_,_,_,_],[DSH,DSH,DSH,DSH,_,_,_,DSH,DSH,DSH,DSH,_,_,_,_,_],[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]],
+ [[_,_,_,DH,DH,DH,DH,DH,DH,DH,DH,_,_,_,_,_],[_,_,DH,DH,DH,DH,DH,DH,DH,DH,DH,DH,_,_,_,_],[_,_,DH,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DH,_,_,_,_],[_,_,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,_,_,_,_,_],[_,_,DSk,DG,DG,DG,DSk,DSk,DG,DG,DG,DSk,_,_,_,_],[_,_,DSk,DG,DEY,DG,DG,DG,DG,DEY,DG,DSk,_,_,_,_],[_,_,DSk,DG,DG,DG,DSk,DSk,DG,DG,DG,DSk,_,_,_,_],[_,_,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,DSk,_,_,_,_,_],[_,_,DB,DB,DSk,DSk,DSk,DSk,DB,DB,_,_,_,_,_,_],[_,_,DB,DB,DB,DB,DB,DB,DB,DB,_,_,_,_,_,_],[_,DJ,DJ,DJ,DJ,DW,DW,DJ,DJ,DJ,DJ,DJ,_,_,_,_],[DJ,DJ,DJ,DW,DW,DW,DW,DW,DW,DJ,DJ,DJ,DJ,_,_,_],[DJ,DJ,DW,DW,DW,DW,DW,DW,DW,DW,DJ,DJ,_,_,_,_],[DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,_,_,_,_],[_,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,_,_,_,_,_],[_,_,DJ,DJ,DJ,DJ,DJ,DJ,DJ,DJ,_,_,_,_,_,_],[_,_,DP,DP,DP,DP,DP,DP,DP,DP,_,_,_,_,_,_],[DP,DP,DP,_,_,_,_,_,_,_,DP,DP,_,_,_,_],[DP,DP,_,_,_,_,_,_,_,_,_,DP,DP,_,_,_],[DP,DP,_,_,_,_,_,_,_,_,_,DP,DP,_,_,_],[DSH,DSH,_,_,_,_,_,_,_,_,_,DSH,DSH,_,_,_],[DSH,DSH,DSH,_,_,_,_,_,_,DSH,DSH,DSH,_,_,_,_],[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]]
+];
+const DOM_SW = 16, DOM_SH = 24; // sprite grid size
+let domFrame = 0, domFrameTick = 0;
+
+function drawDom(x, y, frame, alpha){
+  if(alpha<=0) return;
+  ctx.globalAlpha = Math.min(alpha,1);
+  FRAMES[frame%2].forEach((row,ry)=>row.forEach((c,rx)=>{
+    if(!c) return;
+    ctx.fillStyle=c;
+    ctx.fillRect(x+rx*S, y+ry*S, S, S);
+  }));
+  ctx.globalAlpha=1;
+}
+
+// ── PIPE GEOMETRY (matches CSS pipe on other pages) ──
+const PIPE_LEFT_X = 27;   // x-center — same as CSS strip center (54px wide, center=27)
+const ELBOW_Y     = 200;  // y where pipe bends right
+const PIPE_BW = 16;       // rail width — matches #pipe-rail-wrap (16px)
+const PIPE_CW = 28;       // cap width  — matches #pipe-cap (28px)
+const PIPE_CH = 18;       // cap height — matches #pipe-cap (18px)
+
+// Horizontal gradient (for vertical pipe sections)
+function hGrad(lx){
+  const hw=PIPE_BW/2;
+  const g=ctx.createLinearGradient(lx-hw,0,lx+hw,0);
+  g.addColorStop(0,FLG);g.addColorStop(.28,BLU_L);
+  g.addColorStop(.5,'#4aa0e8');g.addColorStop(.72,BLU_L);g.addColorStop(1,FLG);
+  return g;
+}
+// Vertical gradient (for horizontal pipe sections)
+function vGrad(ey){
+  const hw=PIPE_BW/2;
+  const g=ctx.createLinearGradient(0,ey-hw,0,ey+hw);
+  g.addColorStop(0,FLG);g.addColorStop(.28,BLU_L);
+  g.addColorStop(.5,'#4aa0e8');g.addColorStop(.72,BLU_L);g.addColorStop(1,FLG);
+  return g;
+}
+
+// Draw L-shaped pipe — no gap at corner
+function drawPipe(W, vertP, horizP){
+  const lx=PIPE_LEFT_X, ey=ELBOW_Y, cx=W/2, hw=PIPE_BW/2;
+
+  // 1) Left vertical (with +1px to seal gap at elbow)
+  if(vertP>0){
+    ctx.fillStyle=hGrad(lx);
+    ctx.fillRect(lx-hw, 0, PIPE_BW, ey*vertP + 1);
+  }
+
+  // 2) Corner block + horizontal (only after vertical is complete)
+  if(vertP>=1){
+    // Corner: same horiz gradient, extends 1px right to seal gap
+    ctx.fillStyle=hGrad(lx);
+    ctx.fillRect(lx-hw, ey, PIPE_BW+1, PIPE_BW);
+
+    if(horizP>0){
+      // Horizontal: vert gradient, starts at lx+hw (overlaps corner by 1px)
+      ctx.fillStyle=vGrad(ey+hw);
+      ctx.fillRect(lx+hw, ey, (cx-lx-hw)*horizP, PIPE_BW);
+    }
+  }
+
+  // 3) Opening flange at center (downward), flush with horizontal
+  if(horizP>=1){
+    ctx.fillStyle=hGrad(cx);
+    ctx.fillRect(cx-PIPE_CW/2, ey+PIPE_BW-16, PIPE_CW, PIPE_CH+16);
+  }
+}
+
+// Draw green bulge — same size as CSS bulge (26×32px → rx=13, ry=16)
+// pct 0→0.5 = down left pipe; 0.5→1 = right along horizontal
+function drawBulge(W, pct){
+  if(pct<=0||pct>=1) return;
+  const lx=PIPE_LEFT_X, ey=ELBOW_Y, cx=W/2, hw=PIPE_BW/2;
+  let bx,by;
+  if(pct<0.5){
+    bx=lx; by=ey*(pct/0.5);
+  } else {
+    bx=lx+hw+(cx-lx-hw)*((pct-0.5)/0.5);
+    by=ey+hw;
+  }
+  const g=ctx.createRadialGradient(bx-4,by-5,1,bx,by,14);
+  g.addColorStop(0,TEAL_L);g.addColorStop(.6,TEAL);g.addColorStop(1,'#0e7a5c');
+  ctx.fillStyle=g;
+  ctx.beginPath();
+  ctx.ellipse(bx,by,13,16,0,0,Math.PI*2);
+  ctx.fill();
+}
+
+// ── ANIMATION STATE ──
+let phase      = 'pipe';
+let phaseStart = performance.now();
+let pipeVertP = 0, pipeHorizP = 0, bulgePct = 0;
+
+let domY = 0, domAlpha = 0;
+let charAlpha   = CFGS.map(()=>1);  // visible from page load
+let buildAlpha  = 1;                 // visible from page load
+let bouncing    = false;
+let bounceT     = 0;
+
+let congratsShown = false, subtextShown = false;
+
+function easeOut(t){ return 1 - Math.pow(1-t, 3); }
+function easeInOut(t){ return t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
+
+// ── DRAW BUILDING ──
+function drawBuilding(bx, floor, alpha){
+  if(alpha<=0) return;
+  ctx.globalAlpha = Math.min(alpha,1);
+  const BW=72, BH=112;
+  const by = floor - BH;
+
+  // shadow
+  ctx.fillStyle='rgba(0,0,0,0.08)';
+  ctx.fillRect(bx+6, by+6, BW, BH);
+
+  // main facade
+  ctx.fillStyle='#1B2A44';
+  ctx.fillRect(bx, by, BW, BH);
+
+  // top band (lighter)
+  ctx.fillStyle='#243858';
+  ctx.fillRect(bx, by, BW, 22);
+
+  // roof parapet
+  ctx.fillStyle='#0C447C';
+  ctx.fillRect(bx-4, by-6, BW+8, 10);
+  // parapet notches
+  ctx.fillStyle='#1B2A44';
+  for(let i=0;i<5;i++) ctx.fillRect(bx+4+i*14, by-6, 6, 6);
+
+  // JACOB sign on top band
+  ctx.fillStyle='#5DCAA5';
+  ctx.font='bold 10px "Calibri",monospace';
+  ctx.textAlign='center';
+  ctx.letterSpacing='2px';
+  ctx.fillText('JACOB', bx+BW/2, by+15);
+  ctx.letterSpacing='0px';
+
+  // windows: 3 cols × 4 rows
+  const ww=12, wh=10, gx=10, gy=10;
+  const wx0=bx+9, wy0=by+28;
+  for(let row=0;row<4;row++){
+    for(let col=0;col<3;col++){
+      const lit=(row*3+col)%3!==1;
+      ctx.fillStyle = lit ? '#F5EFA0' : '#0a1828';
+      ctx.fillRect(wx0+col*(ww+gx), wy0+row*(wh+gy), ww, wh);
+      // window reflection
+      if(lit){ ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.fillRect(wx0+col*(ww+gx), wy0+row*(wh+gy), 3, 3); }
+    }
+  }
+
+  // door
+  ctx.fillStyle='#0C447C';
+  ctx.fillRect(bx+27, floor-18, 18, 18);
+  ctx.fillStyle='#1a3a60';
+  ctx.fillRect(bx+28, floor-17, 7, 16);
+
+  ctx.globalAlpha=1;
+  ctx.textAlign='left';
+}
+
+// ── MAIN LOOP ──
+function loop(ts){
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0,0,W,H);
+
+  const floor = H * 0.92;
+  const elapsed = ts - phaseStart;
+
+  // ── PHASE: PIPE BUILDS, then BULGE travels ──
+  if(phase==='pipe'){
+    // Pipe: left vertical 0-900ms, horizontal 1000-1900ms
+    pipeVertP  = easeInOut(Math.min(elapsed/900, 1));
+    pipeHorizP = easeInOut(Math.max(Math.min((elapsed-1000)/900, 1), 0));
+    // Bulge starts only after pipe is fully built (2000ms), travels 1200ms
+    bulgePct   = easeInOut(Math.max(Math.min((elapsed-2000)/1200, 1), 0));
+    if(elapsed > 3400){ phase='fall'; phaseStart=ts; }
+  }
+
+  // ── PHASE: DOMINIK FALLS ──
+  if(phase==='fall'){
+    pipeVertP = 1; pipeHorizP = 1; bulgePct = 1;
+    const fallFrom = ELBOW_Y + PIPE_BW + PIPE_CH;  // pipe opening
+    const fallTo   = floor - DOM_SH*S;
+    const t = Math.min(elapsed/3500, 1);            // 3.5 seconds
+    domY     = fallFrom + t*(fallTo-fallFrom);
+    domAlpha = 1;
+    if(elapsed>3700){ phase='settle'; phaseStart=ts; }
+  }
+
+  // ── PHASE: SETTLE + COLLEAGUES ──
+  if(phase==='settle' || phase==='done'){
+    domY = floor - CH;
+    if(elapsed>900 && !bouncing){ bouncing=true; bounceT=ts; }
+    if(elapsed>1100 && !congratsShown){
+      congratsShown=true;
+      document.getElementById('congrats').classList.add('show');
+    }
+    if(elapsed>2200 && !subtextShown){
+      subtextShown=true;
+      document.getElementById('sub-text').classList.add('show');
+      document.getElementById('btn-zeug').classList.add('show');
+      document.getElementById('nav-back').classList.add('show');
+    }
+    if(elapsed>2400) phase='done';
+  }
+
+  // ── BOUNCE ──
+  let gb = 0;
+  if(bouncing){
+    const bt = (ts-bounceT)/1000;
+    // ~3 full bounces then settle
+    const amp = Math.max(0, 7*(1 - bt/2.5));
+    gb = -Math.abs(Math.sin(bt*Math.PI*2.2)) * amp;
+  }
+
+  // ── WAVE ──
+  const waveAmt = 0.5 + 0.5*Math.sin(ts/320);
+
+  // ── DRAW PIPE + BULGE ──
+  drawPipe(W, pipeVertP, pipeHorizP);
+  drawBulge(W, bulgePct);
+
+  // ── FLOOR LINE ──
+  ctx.fillStyle='#d8e4f0';
+  ctx.fillRect(40, floor, W-80, 2);
+
+  // ── POSITION CHARACTERS ──
+  // 6 colleagues + Dominik = 7 slots
+  // Dominik in center (slot 3), colleagues 0-2 left, 4-6 right
+  const nSlots = 7;
+  const spread = Math.min(W-220, 500);
+  const x0 = W/2 - spread/2;  // slot 3 = W/2 = pipe centre
+  const step = spread/(nSlots-1);
+
+  // ── BUILDING (behind characters, right side) ──
+  const buildX = x0 + 6*step + CW/2 + 18;
+  drawBuilding(buildX, floor, buildAlpha);
+
+  // colleagues: slots 0,1,2 and 4,5,6
+  const slots = [0,1,2,4,5,6];
+  CFGS.forEach((cfg, i)=>{
+    const sx = x0 + slots[i]*step - CW/2;
+    const sy = floor - CH + (charAlpha[i]>0.5 ? gb : 0);
+    const wav = cfg.wave ? waveAmt : 0;
+    drawChar(sx, sy, cfg, wav, charAlpha[i]);
+  });
+
+  // Dominik: falls from pipe center, lands at slot 3
+  if(phase!=='pipe'){
+    const domSprW = DOM_SW * S; // 48px
+    const domSprH = DOM_SH * S; // 72px
+    // during fall: centered on pipe; after landing: slot 3
+    const domX = x0 + 3*step - domSprW/2;  // same position during fall and landing
+    const domBounce = (bouncing && domAlpha>=1) ? gb : 0;
+    const domLandY  = floor - domSprH;
+    const drawY     = (phase==='fall') ? domY : domLandY + domBounce;
+    // animate walk frame
+    domFrameTick += 16;
+    if(domFrameTick > 200){ domFrame++; domFrameTick=0; }
+    drawDom(domX, drawY, domFrame, domAlpha);
+  }
+
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+</script>
+
+<script>
+/* ── SCROLL-NAVIGATION: lebenslauf ← abschluss → anhaenge ── */
+(function(){
+  function go(url){
+    document.body.style.transition='opacity .25s ease';
+    document.body.style.opacity='0';
+    setTimeout(function(){location.href=url;},260);
+  }
+  var cd=false;
+  window.addEventListener('wheel',function(e){
+    if(cd)return;
+    var bot=(window.scrollY+window.innerHeight)>=(document.documentElement.scrollHeight-10);
+    var top=window.scrollY<=0;
+    if(e.deltaY>30&&bot){cd=true;go('anlagen.html');}
+    else if(e.deltaY<-30&&top){cd=true;go('lebenslauf.html');}
+  },{passive:true});
+})();
+</script>
+</body>
+</html>

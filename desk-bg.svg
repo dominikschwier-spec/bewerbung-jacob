@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+<defs>
+
+<!-- Desk surface gradient (neutral light wood) -->
+<linearGradient id="dg" x1="0" y1="0" x2="0.35" y2="1">
+  <stop offset="0%"   stop-color="#d8ccb8"/>
+  <stop offset="38%"  stop-color="#c2b49c"/>
+  <stop offset="72%"  stop-color="#a89478"/>
+  <stop offset="100%" stop-color="#b09c82"/>
+</linearGradient>
+
+<!-- Wood grain pattern (wavy horizontal lines) -->
+<pattern id="wg" x="0" y="0" width="1920" height="140" patternUnits="userSpaceOnUse">
+  <path d="M0,5   C280,2  560,8   840,5   C1120,2  1400,7  1680,4  C1760,3 1920,5"    stroke="#7a6848" stroke-width="0.7" fill="none" opacity="0.20"/>
+  <path d="M0,18  C350,14 700,21 1050,18  C1300,15 1550,20 1920,18"                   stroke="#907860" stroke-width="0.5" fill="none" opacity="0.15"/>
+  <path d="M0,32  C320,29 640,35  960,32  C1280,29 1600,34 1920,32"                   stroke="#a08868" stroke-width="0.9" fill="none" opacity="0.22"/>
+  <path d="M0,47  C440,43 880,50 1320,47  C1520,45 1720,48 1920,47"                   stroke="#6a5c40" stroke-width="0.6" fill="none" opacity="0.17"/>
+  <path d="M0,59  C300,56 600,62  900,59  C1200,56 1500,61 1920,59"                   stroke="#806850" stroke-width="0.5" fill="none" opacity="0.14"/>
+  <path d="M0,73  C380,70 760,76 1140,73  C1400,70 1660,74 1920,73"                   stroke="#988060" stroke-width="1.1" fill="none" opacity="0.25"/>
+  <path d="M0,86  C260,83 520,89  780,86  C1040,83 1300,88 1560,86 C1800,84 1920,86" stroke="#7a6848" stroke-width="0.6" fill="none" opacity="0.18"/>
+  <path d="M0,99  C420,96 840,102 1260,99 C1460,97 1660,100 1920,99"                  stroke="#a08868" stroke-width="0.7" fill="none" opacity="0.20"/>
+  <path d="M0,113 C340,110 680,116 1020,113 C1360,110 1640,115 1920,113"              stroke="#6a5c40" stroke-width="0.8" fill="none" opacity="0.19"/>
+  <path d="M0,127 C290,124 580,130  870,127 C1160,124 1450,129 1740,127 C1920,126"   stroke="#907860" stroke-width="0.5" fill="none" opacity="0.15"/>
+  <path d="M0,139 C360,136 720,142 1080,139 C1440,136 1680,140 1920,139"              stroke="#806850" stroke-width="0.7" fill="none" opacity="0.17"/>
+</pattern>
+
+<!-- Specular highlight (subtle sheen across surface) -->
+<linearGradient id="spec" x1="0.05" y1="0" x2="0.9" y2="0.6">
+  <stop offset="0%"   stop-color="rgba(255,248,215,0.22)"/>
+  <stop offset="35%"  stop-color="rgba(255,248,215,0.07)"/>
+  <stop offset="100%" stop-color="rgba(0,0,0,0.06)"/>
+</linearGradient>
+
+<!-- Drop shadow for mug -->
+<filter id="sh" x="-30%" y="-25%" width="160%" height="150%">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="16" result="blur"/>
+  <feOffset in="blur" dx="6" dy="13" result="off"/>
+  <feFlood flood-color="#3a1800" flood-opacity="0.36" result="col"/>
+  <feComposite in="col" in2="off" operator="in" result="shadow"/>
+  <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+
+<!-- Drop shadow for pen -->
+<filter id="psh" x="-5%" y="-60%" width="112%" height="220%">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+  <feOffset in="blur" dx="4" dy="8" result="off"/>
+  <feFlood flood-color="#3a1800" flood-opacity="0.28" result="col"/>
+  <feComposite in="col" in2="off" operator="in" result="shadow"/>
+  <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+
+<!-- Mug ceramic (left-to-right highlight) -->
+<linearGradient id="mug" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0%"   stop-color="#cec6be"/>
+  <stop offset="11%"  stop-color="#f6f2ee"/>
+  <stop offset="77%"  stop-color="#edeae6"/>
+  <stop offset="100%" stop-color="#beb6ae"/>
+</linearGradient>
+
+<!-- Coffee surface -->
+<radialGradient id="cof" cx="38%" cy="32%" r="64%">
+  <stop offset="0%"   stop-color="#6a3c1c"/>
+  <stop offset="65%"  stop-color="#3a1a06"/>
+  <stop offset="100%" stop-color="#230e02"/>
+</radialGradient>
+
+<!-- Pen barrel (JACOB blue) -->
+<linearGradient id="pen" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0%"   stop-color="#60b8f0"/>
+  <stop offset="22%"  stop-color="#2278c0"/>
+  <stop offset="58%"  stop-color="#0c4888"/>
+  <stop offset="100%" stop-color="#1a62a8"/>
+</linearGradient>
+
+<!-- Pen grip (darker blue) -->
+<linearGradient id="grip" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0%"   stop-color="#1060a0"/>
+  <stop offset="100%" stop-color="#083268"/>
+</linearGradient>
+
+<!-- Silver (ferrule + clip) -->
+<linearGradient id="silv" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0%"   stop-color="#e0e0e0"/>
+  <stop offset="50%"  stop-color="#c0c0c0"/>
+  <stop offset="100%" stop-color="#9e9e9e"/>
+</linearGradient>
+
+<!-- Vignette overlay -->
+<radialGradient id="vig" cx="50%" cy="50%" r="70%">
+  <stop offset="28%"  stop-color="transparent"/>
+  <stop offset="100%" stop-color="rgba(0,0,0,0.24)"/>
+</radialGradient>
+
+</defs>
+
+<!-- ══ DESK SURFACE ══ -->
+<rect width="1920" height="1080" fill="url(#dg)"/>
+<rect width="1920" height="1080" fill="url(#wg)"/>
+<rect width="1920" height="1080" fill="url(#spec)"/>
+
+<!-- ══ COFFEE MUG (bottom-left, clear of paper) ══ -->
+<g transform="translate(218,700)" filter="url(#sh)">
+
+  <!-- Body -->
+  <rect x="-68" y="-76" width="136" height="156" rx="7" fill="url(#mug)"/>
+
+  <!-- Bottom cap -->
+  <ellipse cx="0" cy="80" rx="62" ry="16" fill="#c4bcb4"/>
+
+  <!-- Handle (drawn before front content so rim covers joint) -->
+  <path d="M68,-36 C124,-36 132,-16 132,0 C132,16 124,36 68,36"
+    fill="none" stroke="#e6e0da" stroke-width="27"/>
+  <path d="M68,-36 C124,-36 132,-16 132,0 C132,16 124,36 68,36"
+    fill="none" stroke="#ccc4bc" stroke-width="2.2" opacity="0.45"/>
+
+  <!-- Coffee top surface -->
+  <ellipse cx="0" cy="-76" rx="68" ry="25" fill="url(#cof)"/>
+  <!-- Coffee subtle sheen -->
+  <ellipse cx="-10" cy="-80" rx="20" ry="7"
+    fill="rgba(255,200,80,0.07)" transform="rotate(-18,-10,-80)"/>
+
+  <!-- Top rim highlight -->
+  <ellipse cx="0" cy="-76" rx="68" ry="25"
+    fill="none" stroke="rgba(255,255,255,0.30)" stroke-width="2.5"/>
+  <!-- Top rim edge -->
+  <ellipse cx="0" cy="-76" rx="68" ry="25"
+    fill="none" stroke="#beb6ae" stroke-width="1.1"/>
+
+  <!-- JACOB logo pill on mug body -->
+  <rect x="-40" y="-24" width="80" height="28" rx="6" fill="#2082B4" opacity="0.93"/>
+  <text x="0" y="-4" text-anchor="middle"
+    font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="13"
+    letter-spacing="2.5" fill="white">JACOB</text>
+
+  <!-- Mug body vertical shine -->
+  <rect x="-59" y="-70" width="13" height="146" rx="6.5" fill="white" opacity="0.055"/>
+</g>
+
+<!-- Steam wisps above mug -->
+<g fill="none" stroke-linecap="round">
+  <path d="M204,618 C197,596 212,577 204,557"
+    stroke="white" stroke-width="3.5" opacity="0.28"/>
+  <path d="M219,623 C214,600 230,581 223,560"
+    stroke="white" stroke-width="3"   opacity="0.22"/>
+  <path d="M233,616 C229,594 243,577 237,557"
+    stroke="white" stroke-width="2.5" opacity="0.17"/>
+</g>
+
+<!-- ══ BALLPOINT PEN (right side, slight diagonal) ══ -->
+<g transform="translate(1700,408) rotate(14)" filter="url(#psh)">
+
+  <!-- Main barrel -->
+  <rect x="-120" y="-7" width="238" height="14" rx="7" fill="url(#pen)"/>
+
+  <!-- Grip zone -->
+  <rect x="82" y="-7" width="44" height="14" rx="5" fill="url(#grip)"/>
+  <!-- Grip ridges -->
+  <line x1="90"  y1="-7" x2="90"  y2="7" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+  <line x1="98"  y1="-7" x2="98"  y2="7" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+  <line x1="106" y1="-7" x2="106" y2="7" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+  <line x1="114" y1="-7" x2="114" y2="7" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+
+  <!-- Ferrule (silver ring) -->
+  <rect x="126" y="-6.5" width="22" height="13" rx="3" fill="url(#silv)"/>
+  <rect x="127" y="-6.5" width="5"  height="13" rx="2" fill="rgba(255,255,255,0.38)"/>
+
+  <!-- Tip cone -->
+  <polygon points="148,-4.5 148,4.5 164,1.5 164,-1.5" fill="#989898"/>
+  <circle cx="164" cy="0" r="2.2" fill="#686868"/>
+  <!-- Ballpoint dot -->
+  <circle cx="164" cy="0" r="0.9" fill="#444"/>
+
+  <!-- Cap end (rounded) -->
+  <rect x="-126" y="-7" width="13" height="14" rx="7" fill="#1060a0"/>
+
+  <!-- Clip bar along pen top -->
+  <rect x="-112" y="-12.5" width="178" height="5.5" rx="2.75" fill="url(#silv)"/>
+  <!-- Clip ball (cap end) -->
+  <circle cx="-112" cy="-9.75" r="5.5" fill="#c8ccce"/>
+  <!-- Clip nub (lower end) -->
+  <circle cx="66"   cy="-9.75" r="4.2" fill="#a8acb0"/>
+
+  <!-- Barrel highlight stripe -->
+  <rect x="-120" y="-5" width="238" height="3.5" rx="1.75" fill="white" opacity="0.16"/>
+
+  <!-- JACOB text engraved on barrel -->
+  <text x="-22" y="4.5" text-anchor="middle"
+    font-family="Arial,sans-serif" font-size="8.5" font-weight="700"
+    letter-spacing="1.5" fill="rgba(255,255,255,0.46)">JACOB</text>
+</g>
+
+<!-- ══ PAPER STACK (lower right) ══ -->
+<!-- shadow -->
+<ellipse cx="1494" cy="956" rx="92" ry="15" fill="rgba(20,10,2,0.17)"/>
+<g transform="translate(1480, 838)">
+  <!-- Bottom paper (rotated CW) -->
+  <g transform="rotate(10)">
+    <rect x="-74" y="-108" width="148" height="204" rx="2" fill="#d6d2ca"/>
+  </g>
+  <!-- Middle paper (rotated CCW) -->
+  <g transform="rotate(-6)">
+    <rect x="-72" y="-106" width="148" height="204" rx="2" fill="#e6e2da"/>
+  </g>
+  <!-- Top paper (straight) -->
+  <rect x="-70" y="-104" width="148" height="204" rx="2" fill="#f4f2ee"/>
+  <!-- Top-edge shadow from stack below -->
+  <rect x="-70" y="-104" width="148" height="5" rx="1" fill="rgba(0,0,0,0.05)"/>
+  <!-- Stamp box top-right -->
+  <rect x="22" y="-92" width="32" height="24" rx="2"
+    fill="none" stroke="#c8c0b8" stroke-width="1.4" stroke-dasharray="3,2"/>
+  <!-- Address lines -->
+  <rect x="-52" y="-82" width="62" height="5" rx="2.5" fill="#c8c4bc"/>
+  <rect x="-52" y="-72" width="48" height="5" rx="2.5" fill="#c8c4bc"/>
+  <rect x="-52" y="-62" width="55" height="5" rx="2.5" fill="#c8c4bc"/>
+  <!-- Ruled body lines -->
+  <line x1="-52" y1="-38" x2="62" y2="-38" stroke="#d8d4cc" stroke-width="1.4"/>
+  <line x1="-52" y1="-23" x2="62" y2="-23" stroke="#d8d4cc" stroke-width="1.4"/>
+  <line x1="-52" y1="-8"  x2="48" y2="-8"  stroke="#d8d4cc" stroke-width="1.4"/>
+  <line x1="-52" y1="7"   x2="58" y2="7"   stroke="#d8d4cc" stroke-width="1.4"/>
+  <line x1="-52" y1="22"  x2="40" y2="22"  stroke="#d8d4cc" stroke-width="1.4"/>
+  <line x1="-52" y1="37"  x2="55" y2="37"  stroke="#d8d4cc" stroke-width="1.4"/>
+  <!-- Left + top edge highlight -->
+  <rect x="-70" y="-104" width="2"   height="204" fill="rgba(255,255,255,0.45)"/>
+  <rect x="-70" y="-104" width="148" height="2"   fill="rgba(255,255,255,0.45)"/>
+</g>
+
+<!-- ══ CALCULATOR (lower left, beside mug) ══ -->
+<!-- shadow -->
+<ellipse cx="490" cy="948" rx="60" ry="12" fill="rgba(20,10,2,0.17)"/>
+<g transform="translate(480, 858)">
+  <!-- Body -->
+  <rect x="-54" y="-82" width="108" height="162" rx="10" fill="#28261e"/>
+  <!-- Top bevel -->
+  <rect x="-54" y="-82" width="108" height="8" rx="5" fill="rgba(255,255,255,0.07)"/>
+  <!-- Side highlight -->
+  <rect x="-54" y="-82" width="5"   height="162" rx="3" fill="rgba(255,255,255,0.04)"/>
+
+  <!-- Display housing -->
+  <rect x="-44" y="-72" width="88" height="36" rx="5" fill="#161612"/>
+  <!-- LCD screen -->
+  <rect x="-40" y="-68" width="80" height="28" rx="3" fill="#2c4824"/>
+  <!-- Display readout -->
+  <text x="34" y="-45" text-anchor="end"
+    font-family="'Courier New',monospace" font-size="13" font-weight="700"
+    fill="#8ecf5c" opacity="0.90">0.</text>
+
+  <!-- Row 1: AC  +/-  %  ÷ -->
+  <rect x="-42" y="-26" width="20" height="13" rx="3" fill="#4c4a44"/>
+  <rect x="-18" y="-26" width="20" height="13" rx="3" fill="#4c4a44"/>
+  <rect x="6"   y="-26" width="20" height="13" rx="3" fill="#4c4a44"/>
+  <rect x="30"  y="-26" width="20" height="13" rx="3" fill="#b84e1e"/>
+  <!-- Row 2: 7  8  9  × -->
+  <rect x="-42" y="-8"  width="20" height="13" rx="3" fill="#38362e"/>
+  <rect x="-18" y="-8"  width="20" height="13" rx="3" fill="#38362e"/>
+  <rect x="6"   y="-8"  width="20" height="13" rx="3" fill="#38362e"/>
+  <rect x="30"  y="-8"  width="20" height="13" rx="3" fill="#b84e1e"/>
+  <!-- Row 3: 4  5  6  − -->
+  <rect x="-42" y="10"  width="20" height="13" rx="3" fill="#38362e"/>
+  <rect x="-18" y="10"  width="20" height="13" rx="3" fill="#38362e"/>
+  <rect x="6"   y="10"  width="20" height="13" rx="3" fill="#38362e"/>
+  <rect x="30"  y="10"  width="20" height="13" rx="3" fill="#b84e1e"/>
+  <!-- Row 4: 1  2  3  + (tall, spans rows 4+5) -->
+  <rect x="-42" y="28"  width="20" height="13" rx="3" fill="#38362e"/>
+  <rect x="-18" y="28"  width="20" height="13" rx="3" fill="#38362e"/>
+  <rect x="6"   y="28"  width="20" height="13" rx="3" fill="#38362e"/>
+  <rect x="30"  y="28"  width="20" height="31" rx="3" fill="#b84e1e"/>
+  <!-- Row 5: 0 (wide)  . -->
+  <rect x="-42" y="46"  width="44" height="13" rx="3" fill="#38362e"/>
+  <rect x="6"   y="46"  width="20" height="13" rx="3" fill="#38362e"/>
+
+  <!-- Key labels -->
+  <text x="-32" y="-16" text-anchor="middle" font-family="Arial,sans-serif" font-size="6" fill="rgba(255,255,255,0.60)">AC</text>
+  <text x="-8"  y="-16" text-anchor="middle" font-family="Arial,sans-serif" font-size="6" fill="rgba(255,255,255,0.60)">+/-</text>
+  <text x="16"  y="-16" text-anchor="middle" font-family="Arial,sans-serif" font-size="6" fill="rgba(255,255,255,0.60)">%</text>
+  <text x="40"  y="-16" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="rgba(255,255,255,0.88)">÷</text>
+
+  <text x="-32" y="2"   text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">7</text>
+  <text x="-8"  y="2"   text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">8</text>
+  <text x="16"  y="2"   text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">9</text>
+  <text x="40"  y="2"   text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="rgba(255,255,255,0.88)">×</text>
+
+  <text x="-32" y="20"  text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">4</text>
+  <text x="-8"  y="20"  text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">5</text>
+  <text x="16"  y="20"  text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">6</text>
+  <text x="40"  y="20"  text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="rgba(255,255,255,0.88)">−</text>
+
+  <text x="-32" y="38"  text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">1</text>
+  <text x="-8"  y="38"  text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">2</text>
+  <text x="16"  y="38"  text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">3</text>
+  <text x="40"  y="45"  text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="rgba(255,255,255,0.88)">+</text>
+
+  <text x="-20" y="56"  text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">0</text>
+  <text x="16"  y="56"  text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.72)">.</text>
+</g>
+
+<!-- ══ VIGNETTE (darkens edges for depth) ══ -->
+<rect width="1920" height="1080" fill="url(#vig)"/>
+
+</svg>
